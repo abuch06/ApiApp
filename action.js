@@ -30,6 +30,7 @@ $(document).ready(function() {
 
   var ajaxOptions = {
     url: census_api_string,
+    contentType: 'text/plain',
     dataType: 'json',
     success: updatePage,
     error: printError
