@@ -17,8 +17,9 @@ var rendererOptions = {
 };
 
 $(document).ready(function() {
+  $('#myModal').modal('toggle')
 
- directionsDisplay = new google.maps.DirectionsRenderer(rendererOptions);
+  directionsDisplay = new google.maps.DirectionsRenderer(rendererOptions);
   directionsService = new google.maps.DirectionsService();
   function initialize()
   {   
@@ -34,6 +35,7 @@ $(document).ready(function() {
 
   google.maps.event.addListener(directionsDisplay, 'directions_changed', function() {
     showSteps(directionsDisplay.getDirections());
+    updateFields(directionsDisplay.getDirections());
   });
 
   $(document).on('click','#goButt', function(){
@@ -195,4 +197,12 @@ var delMarker = function (id) {
       markerNow.setMap(null);
     }
   }
+}
+
+function updateFields(directions) {
+  console.log(directions);
+  var route = directions.routes[0];
+  var leg = route.legs[0];
+  $('#startLocation').val(leg.start_address);
+  $('#endLocation').val(leg.end_address);
 }
