@@ -22,12 +22,12 @@
           <div class="form-group">
             <label for="startLocation">Start Address</label>
             <!--<input class="form-control" id="startLocation" placeholder="Input Start Location Here">-->
-            <input class="form-control" id="startLocation" value="Springfield VA 22153">
+            <input class="form-control" id="startLocation" value="Bethesda MD">
           </div>
           <div class="form-group">
             <label for="endLocation">End Address</label>
             <!--<input class="form-control" id="endLocation" placeholder="Input End Location Here">-->
-            <input class="form-control" id="endLocation" value="Washington D.C.">
+            <input class="form-control" id="endLocation" value="Tysons VA">
           </div>
         </div>
         <div class="form-inline"  role="form" style="margin-top:10px;margin-bottom:10px;" id = 'otherInput'>
@@ -61,8 +61,8 @@
           </div>
           <div class="modal-body">
             <p>Type in start/ending addresses and click Go! The path is draggable, just like Google Maps.</p>
-            <p>Instagram pictures will show up at each turn.  The pictures are draggable (left click) and can be enlarged (right click)</p>
-            The number of pictures at each turn can be set.
+            <p>Instagram pictures will show up at each turn.  The pictures are draggable (left click) and can be enlarged (right click). Double Click to zoom even further.</p>
+            <p>The number of pictures at each turn can be set.</p>
             <p>&nbsp;</p> 
             <p>Enjoy!</p>
             <p>&nbsp;</p>
@@ -75,6 +75,22 @@
       </div><!-- /.modal-dialog -->
     </div><!-- /.modal -->
 
+    <div class="modal fade" id="picModal" tabindex="-2" role="dialog" aria-labelledby="picModalLabel" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content" id="picModalContent">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+            <h4 class="modal-title" id="myModalLabel"></h4>
+          </div>
+          <div class="modal-body" id = "picDiv">
+            
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+          </div>
+        </div><!-- /.modal-content -->
+      </div><!-- /.modal-dialog -->
+    </div><!-- /.modal -->
     <div id="googleMap"></div>
     
   </body>

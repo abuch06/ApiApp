@@ -48,3 +48,14 @@ h1 {
 .modal > div{
     text-align: center;
 }
+#picModalContent {
+	height: 700px;
+}
+#picDiv {
+    margin-top: 0%;
+	background-repeat:no-repeat;
+	background-position:center; 
+}
+#picModal {
+    margin-top: 0%;
+}

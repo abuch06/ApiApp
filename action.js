@@ -96,7 +96,8 @@ function getInstagramPic(lat, lng) {
         for (i = 0; i < data_all.length; i++) {
           var data_now = data_all[i];
           if(data_now.hasOwnProperty('images')) {
-            drawImage(data_now.images.thumbnail, lat, lng);
+            console.log(data_now.images);
+            drawImage(data_now.images.standard_resolution, lat, lng);
           }
         }
       }
@@ -131,11 +132,16 @@ function drawImage(picData, lat, lng){
     markerArray[markerCounter] = marker;
     markerCounter++;
     google.maps.event.addListener(marker, 'dblclick', function() {
+      $('#picModal').modal('toggle');
+      var window_height = $( window ).height() ;
+      var iconUrl = imageResize2(marker.icon.url, 1, window_height*0.50);
+      $('#picModalContent').height(window_height*0.65 );
+      $('#picDiv').height(window_height*0.50);
+      $('#picDiv').css('background-image', 'url(' + iconUrl + ')');
       map.setZoom(13);
       map.setCenter(marker.getPosition());
     });
-    google.maps.event.addListener(marker, 'rightclick', function (){
-      map.setCenter(marker.getPosition());
+    google.maps.event.addListener(marker, 'rightclick', function (){  
       var magFactor = Math.min(picZoom, 3); 
       var iconUrl = marker.icon.url;
       var newPicUrl = imageResize2(iconUrl, picAR, maxImageHeight*magFactor)
@@ -156,6 +162,16 @@ function drawImage(picData, lat, lng){
         icon: image,
         shape: shape,
         draggable: true,
+      });
+      google.maps.event.addListener(bigMarker, 'dblclick', function() {
+        $('#picModal').modal('toggle');
+        var window_height = $( window ).height() ;
+        var iconUrl = imageResize2(marker.icon.url, 1, window_height*0.50);
+        $('#picModalContent').height(window_height*0.65 );
+        $('#picDiv').height(window_height*0.50);
+        $('#picDiv').css('background-image', 'url(' + iconUrl + ')');
+        map.setZoom(13);
+        map.setCenter(marker.getPosition());
       });
       markerArray[markerCounter] = bigMarker;
       markerCounter++;
