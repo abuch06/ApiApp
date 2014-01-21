@@ -12,12 +12,22 @@ var picCount = 1;
 var maxImageHeight = 50; //PX tall
 var picRadius = 100; //meters
 var picZoom;
+var maxQuery = 150;
 var rendererOptions = {
   draggable: true
 };
 
 $(document).ready(function() {
   $('#myModal').modal('toggle')
+
+  var googleMapPosition = $('#googleMap').offset();
+  var googleMapWidth = $('#googleMap').width();
+  var googleMapHeight = $('#googleMap').height();
+  var trashWidth = $('#trash').width();
+  var trashHeight = $('#trash').height();
+  var trashLocationTop = googleMapPosition.top+googleMapHeight-trashHeight;
+  var trashLocationLeft = googleMapPosition.left+googleMapWidth-trashWidth-30;
+  $('#trash').css({ top: trashLocationTop, left: trashLocationLeft});
 
   directionsDisplay = new google.maps.DirectionsRenderer(rendererOptions);
   directionsService = new google.maps.DirectionsService();
@@ -66,10 +76,12 @@ function calcRoute(start, end) {
 }
 
 function showSteps(directionResult) {
+  // Erase all old markers
   for (i = 0; i < markerArray.length; i++) {
     markerArray[i].setMap(null);
   }
   var myRoute = directionResult.routes[0].legs[0];
+  // Loop Through Direction Turns -> plot icons at each turn
   for (var i = 0; i < myRoute.steps.length; i++) {
     var positionNow = myRoute.steps[i].start_point;
     var pic = getInstagramPic(positionNow.d, positionNow.e);
@@ -96,8 +108,15 @@ function getInstagramPic(lat, lng) {
         for (i = 0; i < data_all.length; i++) {
           var data_now = data_all[i];
           if(data_now.hasOwnProperty('images')) {
-            console.log(data_now.images);
-            drawImage(data_now.images.standard_resolution, lat, lng);
+            var cascadeFactor = i*.0005;
+            // console.log(i)
+            // console.log(lat);
+            // console.log(lng);
+            lat = lat - cascadeFactor;
+            lng = lng + cascadeFactor;
+            // console.log(lat);
+            // console.log(lng);
+            drawImage(data_now.images.standard_resolution, lat, lng, i);
           }
         }
       }
@@ -107,7 +126,7 @@ function getInstagramPic(lat, lng) {
     }     
   });
 }
-function drawImage(picData, lat, lng){
+function drawImage(picData, lat, lng, counter){
     var picAR = picData.width/picData.height;
     var picUrl = imageResize(picData.url, picAR, maxImageHeight)
     var image = {
@@ -131,6 +150,8 @@ function drawImage(picData, lat, lng){
     });
     markerArray[markerCounter] = marker;
     markerCounter++;
+
+    // Doubleclick Action
     google.maps.event.addListener(marker, 'dblclick', function() {
       $('#picModal').modal('toggle');
       var window_height = $( window ).height() ;
@@ -141,6 +162,14 @@ function drawImage(picData, lat, lng){
       map.setZoom(13);
       map.setCenter(marker.getPosition());
     });
+
+    //Drag End Callback
+    google.maps.event.addListener(marker, 'dragend', function (event) {
+      console.log(map.getBounds());
+
+    });
+
+    // Right click Action
     google.maps.event.addListener(marker, 'rightclick', function (){  
       var magFactor = Math.min(picZoom, 3); 
       var iconUrl = marker.icon.url;
@@ -163,6 +192,9 @@ function drawImage(picData, lat, lng){
         shape: shape,
         draggable: true,
       });
+
+
+
       google.maps.event.addListener(bigMarker, 'dblclick', function() {
         $('#picModal').modal('toggle');
         var window_height = $( window ).height() ;
@@ -216,9 +248,19 @@ var delMarker = function (id) {
 }
 
 function updateFields(directions) {
-  console.log(directions);
+  //console.log(directions);
   var route = directions.routes[0];
   var leg = route.legs[0];
   $('#startLocation').val(leg.start_address);
   $('#endLocation').val(leg.end_address);
 }
+$( window ).resize(function() {
+  var googleMapPosition = $('#googleMap').offset();
+  var googleMapWidth = $('#googleMap').width();
+  var googleMapHeight = $('#googleMap').height();
+  var trashWidth = $('#trash').width();
+  var trashHeight = $('#trash').height();
+  var trashLocationTop = googleMapPosition.top+googleMapHeight-trashHeight;
+  var trashLocationLeft = googleMapPosition.left+googleMapWidth-trashWidth-30;
+  $('#trash').css({ top: trashLocationTop, left: trashLocationLeft});
+});
